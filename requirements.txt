@@ -1,0 +1,40 @@
+# Core
+numpy
+pandas
+scipy
+scikit-learn
+
+# Deep Learning
+torch
+torchvision
+
+# NLP
+transformers
+nltk
+spacy
+
+# Computer Vision
+opencv-python
+pillow
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# Web Framework
+fastapi
+uvicorn
+websockets
+
+# Database
+sqlalchemy
+redis
+
+# Async
+asyncio
+aiohttp
+
+# Testing
+pytest
+pytest-asyncio

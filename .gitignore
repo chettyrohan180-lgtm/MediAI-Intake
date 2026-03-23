@@ -1,0 +1,19 @@
+# Environments
+.venv/
+.ai/
+env/
+
+# Python caching
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# IDE configurations
+.vscode/
+.idea/
+.DS_Store
+
+# Temporary outputs
+temp/
+logs/
