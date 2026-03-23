@@ -1,0 +1,41 @@
+# Universal line ending handling
+* text=auto
+
+# Python files
+*.py text
+
+# Web files
+*.js text
+*.css text
+*.html text
+
+# Config files
+*.json text
+*.yaml text
+*.yml text
+*.xml text
+
+# Documentation
+*.md text
+*.txt text
+*.csv text
+
+# Shell scripts (Mac/Linux)
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Windows batch files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.xlsx binary
+*.xls binary
+*.zip binary
+*.pyc binary
