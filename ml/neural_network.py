@@ -13,10 +13,7 @@ from typing import Tuple, Dict
 import pandas as pd
 
 class MortalityPredictorNN(nn.Module):
-    """
-    Deep Neural Network for predicting patient mortality risk
-    Architecture: Input → FC → BN → ReLU → Dropout → FC → BN → ReLU → Dropout → Output
-    """
+    """NN for mortality prediction"""
     
     def __init__(self, input_dim: int, hidden_dims: List[int] = [128, 64, 32], dropout_rate: float = 0.3):
         super(MortalityPredictorNN, self).__init__()
@@ -42,9 +39,7 @@ class MortalityPredictorNN(nn.Module):
         return self.network(x)
 
 class MortalityPredictor:
-    """
-    Complete mortality prediction pipeline with training and inference
-    """
+    """Mortality predictor wrapper"""
     
     def __init__(self, input_dim: int, learning_rate: float = 0.001):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -62,9 +57,6 @@ class MortalityPredictor:
         
     def prepare_data(self, features: np.ndarray, labels: np.ndarray, 
                     val_split: float = 0.2) -> Tuple[DataLoader, DataLoader]:
-        """
-        Prepare data loaders with scaling and splitting
-        """
         # Scale features
         features_scaled = self.scaler.fit_transform(features)
         
@@ -88,9 +80,6 @@ class MortalityPredictor:
     
     def train(self, train_loader: DataLoader, val_loader: DataLoader, 
              epochs: int = 100, early_stopping_patience: int = 10):
-        """
-        Train the model with early stopping
-        """
         best_val_loss = float('inf')
         patience_counter = 0
         
@@ -158,9 +147,6 @@ class MortalityPredictor:
                       f"Train Acc: {train_acc:.4f}, Val Acc: {val_acc:.4f}")
     
     def predict(self, features: np.ndarray) -> np.ndarray:
-        """
-        Make predictions on new data
-        """
         self.model.eval()
         try:
             features_scaled = self.scaler.transform(features)

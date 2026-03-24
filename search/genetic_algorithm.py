@@ -1,6 +1,5 @@
 """
-Genetic Algorithm for Hospital Resource Optimization
-Implements: Evolutionary computation, multi-objective optimization
+Genetic Algo for hospital scheduling
 """
 
 import random
@@ -19,14 +18,7 @@ class ResourceSchedule:
     patient_satisfaction: float
 
 class GeneticResourceOptimizer:
-    """
-    Multi-objective genetic algorithm for resource scheduling
-    Objectives:
-    1. Minimize total cost
-    2. Minimize total time
-    3. Maximize resource utilization
-    4. Maximize patient satisfaction
-    """
+    """GA for scheduling"""
     
     def __init__(self, 
                  population_size: int = 100,
@@ -76,10 +68,7 @@ class GeneticResourceOptimizer:
     
     def fitness_function(self, schedule: ResourceSchedule, 
                         cost_weights: Tuple[float, float, float, float] = (0.3, 0.3, 0.2, 0.2)) -> float:
-        """
-        Multi-objective fitness function
-        Higher fitness is better
-        """
+        """Fitness function"""
         # Normalize each objective to [0,1] range
         cost_normalized = 1 / (1 + schedule.total_cost)
         time_normalized = 1 / (1 + schedule.total_time)
@@ -218,9 +207,7 @@ class GeneticResourceOptimizer:
 
     def evolve(self, tasks: List, resources: List, 
               verbose: bool = True) -> ResourceSchedule:
-        """
-        Main evolution loop
-        """
+        """Main GA loop"""
         # Initialize
         self.initialize_population(tasks, resources)
         

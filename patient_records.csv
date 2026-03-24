@@ -1,2 +1,3 @@
 Patient ID,Age,Gender,Symptoms,Diagnosis,Explanation,Treatment,Mortality Risk
 44,50,female,"Palpitations, SOB, weakness, irregular pulse",Atrial Fibrillation,Irregular rapid heart rhythm (upper chambers).,"diagnosis_44 by doctor_2, treatment_44_cardioversion by vent_1",0.6148
+10,56,male,chest pain ,Myocardial Infarction,Coronary artery blockage; heart tissue death.,"diagnosis_10 by doctor_2, treatment_10_surgery by vent_1",0.7280

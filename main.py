@@ -1,6 +1,5 @@
 """
-MediAI - Complete Hospital Management System
-Integrates all AI/ML components into a unified system
+MediAI completely unified hospital management system.
 """
 
 import asyncio
@@ -25,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class MediAIHospitalSystem:
     """
-    Complete hospital management system integrating all AI components
+    Hospital management system setup
     """
     
     def __init__(self):
@@ -47,7 +46,6 @@ class MediAIHospitalSystem:
         self._initialize_system()
         
     def _initialize_system(self):
-        """Initialize all system components"""
         logger.info("Initializing MediAI Hospital System...")
         
         # Initialize resources
@@ -60,7 +58,6 @@ class MediAIHospitalSystem:
         logger.info("System initialized successfully")
     
     def _initialize_resources(self):
-        """Initialize hospital resources and register Multi-Agent entities"""
         resources = [
             {'id': 'icu_1', 'type': ResourceType.ICU_BED, 'location': (0, 0), 'capacity': 1},
             {'id': 'icu_2', 'type': ResourceType.ICU_BED, 'location': (0, 1), 'capacity': 1},
@@ -90,7 +87,6 @@ class MediAIHospitalSystem:
 
     
     def _load_models(self):
-        """Load pre-trained ML models"""
         try:
             self.mortality_predictor.load_model('data/models/mortality_model.pth')
             logger.info("Models loaded successfully")
@@ -98,35 +94,32 @@ class MediAIHospitalSystem:
             logger.warning("No pre-trained models found. Using untrained models.")
     
     async def handle_emergency(self, patient_data: Dict) -> Dict:
-        """
-        Complete emergency handling pipeline
-        """
         patient_id = patient_data['id']
         logger.info(f"Handling emergency for patient {patient_id}")
         
-        # Step 1 & 2: Diagnosis using generalized table lookup
+        # run diagnosis
         logger.info(f"Analyzing symptoms for patient {patient_id}")
         diagnosis = self.diagnosis_engine.diagnose(patient_data.get('symptoms_text', ''), patient_id)
         
-        # Step 3: Analyze X-ray if available
+        # check xray
         if 'xray_image' in patient_data:
             xray_result = self.xray_analyzer.analyze(patient_data['xray_image'])
             diagnosis['xray_findings'] = xray_result
         
-        # Step 4: Predict mortality risk using neural network
+        # mortality prediction
         risk_features = self._extract_risk_features(patient_data, diagnosis)
         mortality_risk = self.mortality_predictor.predict(risk_features)
         
-        # Step 5: Create tasks for multi-agent system
+        # assign tasks
         tasks = self._create_medical_tasks(patient_id, diagnosis, mortality_risk)
         
-        # Step 6: Optimize resource allocation using genetic algorithm
+        # scheduling
         optimal_schedule = self.resource_optimizer.evolve(
             tasks, 
             list(self.resources.values())
         )
         
-        # Step 7: Coordinate agents for execution
+        # execute tasks
         for task in tasks:
             self.agent_coordinator.add_task(task)
         
@@ -134,7 +127,7 @@ class MediAIHospitalSystem:
         
         mortality_risk_scalar = float(mortality_risk[0][0])
         
-        # Step 8: Generate comprehensive report
+        # final report
         report = self._generate_report(patient_id, diagnosis, mortality_risk_scalar, optimal_schedule)
         
         return {
@@ -146,7 +139,6 @@ class MediAIHospitalSystem:
         }
     
     def _extract_risk_features(self, patient_data: Dict, diagnosis: Dict) -> np.ndarray:
-        """Extract features for mortality prediction"""
         features = []
         
         # Demographic features
@@ -169,7 +161,6 @@ class MediAIHospitalSystem:
     
     def _create_medical_tasks(self, patient_id: str, diagnosis: Dict, 
                             mortality_risk: np.ndarray) -> List[Task]:
-        """Create tasks for medical procedures"""
         tasks = []
         risk_score = float(mortality_risk[0][0])
         
@@ -216,7 +207,6 @@ class MediAIHospitalSystem:
     
     def _generate_report(self, patient_id: str, diagnosis: Dict, 
                         mortality_risk: float, schedule) -> str:
-        """Generate comprehensive medical report"""
         report = f"""
         ========================================
         MEDICAL REPORT - Patient {patient_id}
@@ -261,7 +251,6 @@ class MediAIHospitalSystem:
         return report
 
 async def main():
-    """Main execution function"""
     
     # Initialize system
     system = MediAIHospitalSystem()
@@ -310,12 +299,7 @@ async def main():
         
         print(result['report'])
         
-        # Demo: Show knowledge graph path
-        print("\nMedical Knowledge Graph Query:")
-        print("Finding path from 'Smoking' to 'HeartAttack'...")
-        path = system.medical_knowledge.find_path('Smoking', 'HeartAttack')
-        if path:
-            print(f"Path found: {' → '.join(path[0])}")
+        # Demo: skip medical_knowledge as it is not implemented
         
         print("\n" + "="*60)
     

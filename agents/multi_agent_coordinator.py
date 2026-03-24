@@ -51,11 +51,7 @@ class Agent:
 
 class MultiAgentCoordinator:
     """
-    Advanced Multi-Agent System using:
-    - Contract Net Protocol for task allocation
-    - Auction-based resource allocation
-    - Distributed constraint satisfaction
-    - Coalition formation for complex tasks
+    Multi-Agent System coordinator
     """
 
     def __init__(self):
@@ -77,28 +73,24 @@ class MultiAgentCoordinator:
         self.tasks[task.id] = task
 
     async def distribute_tasks(self):
-        """
-        Contract Net Protocol for task distribution
-        Phases: Announcement → Bidding → Awarding → Execution
-        """
         while self.task_queue:
             priority, task_id = heapq.heappop(self.task_queue)
             task = self.tasks[task_id]
 
-            # Phase 1: Announce task to potential agents
+            # find agents for this task
             eligible_agents = self._find_eligible_agents(task)
 
             if not eligible_agents:
                 print(f"No eligible agents for task {task_id}")
                 continue
 
-            # Phase 2: Collect bids
+            # get bids
             bids = await self._collect_bids(eligible_agents, task)
 
-            # Phase 3: Award task to best bidder
+            # pick winner
             winner = self._select_best_bid(bids)
 
-            # Phase 4: Execute and monitor
+            # run task
             if winner:
                 await self._execute_task(winner, task)
             else:
@@ -122,11 +114,7 @@ class MultiAgentCoordinator:
         """Collect bids from agents (simulated negotiation)"""
         bids = {}
         for agent in agents:
-            # Agent calculates bid based on:
-            # - Distance to task location
-            # - Current workload
-            # - Skill level for task
-            # - Energy level
+            # agent calculates bid based on distance, workload, skill, energy
 
             distance = self._calculate_distance(agent.current_location, task.location)
             workload = self._calculate_workload(agent)
@@ -207,10 +195,6 @@ class MultiAgentCoordinator:
         return (intersection / union) * 100
 
 class CoalitionFormation:
-    """
-    Advanced coalition formation for complex medical procedures
-    Uses: Game theory, Shapley values, cooperative game theory
-    """
 
     def __init__(self, coordinator: MultiAgentCoordinator):
         self.coordinator = coordinator

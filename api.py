@@ -48,7 +48,6 @@ class PatientData(BaseModel):
 
 @app.get("/")
 async def root():
-    """Serve the main UI page."""
     return FileResponse('static/index.html')
 
 def record_to_csv(patient_id, age, gender, symptoms, diagnosis_list, explanation, treatment, risk):
@@ -75,12 +74,8 @@ def record_to_csv(patient_id, age, gender, symptoms, diagnosis_list, explanation
 
 @app.post("/api/emergency")
 async def process_emergency(patient: PatientData):
-    """
-    Handle incoming patient data, run it through the system,
-    and return the structured report.
-    """
     try:
-        # Convert Pydantic model to dictionary structure expected by handle_emergency
+        # convert back to dict for the main sys
         patient_dict = {
             'id': patient.id,
             'age': patient.age,
@@ -97,9 +92,7 @@ async def process_emergency(patient: PatientData):
         # Await the system's emergency handler
         result = await system.handle_emergency(patient_dict)
         
-        # To make it easier for our frontend to render beautifully, 
-        # we return the structured JSON data instead of just the text blob report.
-        # Ensure treatment_plan which is an object has a serializable form
+        # Format treatments nicely for the frontend
         assignments = []
         if result.get('treatment_plan') and hasattr(result['treatment_plan'], 'assignments'):
             for assignment in result['treatment_plan'].assignments:
