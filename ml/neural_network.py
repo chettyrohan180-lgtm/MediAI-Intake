@@ -9,11 +9,10 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import StandardScaler
-from typing import Tuple, Dict
-import pandas as pd
+from typing import Tuple, List
 
 class MortalityPredictorNN(nn.Module):
-    """NN for mortality prediction"""
+    # base nn model for mortality
     
     def __init__(self, input_dim: int, hidden_dims: List[int] = [128, 64, 32], dropout_rate: float = 0.3):
         super(MortalityPredictorNN, self).__init__()
@@ -39,7 +38,7 @@ class MortalityPredictorNN(nn.Module):
         return self.network(x)
 
 class MortalityPredictor:
-    """Mortality predictor wrapper"""
+    # wrapper around the actual pytorch model
     
     def __init__(self, input_dim: int, learning_rate: float = 0.001):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -80,7 +79,7 @@ class MortalityPredictor:
     
     def train(self, train_loader: DataLoader, val_loader: DataLoader, 
              epochs: int = 100, early_stopping_patience: int = 10):
-        best_val_loss = float('inf')
+        best_val_loss = 1e9  # arbitrary large number
         patience_counter = 0
         
         for epoch in range(epochs):
@@ -101,7 +100,7 @@ class MortalityPredictor:
                 
                 train_loss += loss.item()
                 predicted = (outputs > 0.5).float()
-                train_correct += (predicted == labels).sum().item()
+                train_correct += torch.sum(predicted == labels).item()
                 train_total += labels.size(0)
             
             # Validation phase
@@ -118,7 +117,7 @@ class MortalityPredictor:
                     
                     val_loss += loss.item()
                     predicted = (outputs > 0.5).float()
-                    val_correct += (predicted == labels).sum().item()
+                    val_correct += torch.sum(predicted == labels).item()
                     val_total += labels.size(0)
             
             # Record metrics
@@ -155,8 +154,8 @@ class MortalityPredictor:
                 predictions = self.model(features_tensor)
             return predictions.cpu().numpy()
         except Exception:
-            # Fallback for when the scaler is not fitted (untrained model)
-            # We calculate a heuristic mortality risk based on the normalized features
+            # fallback if scaler isn't fitted yet (model not trained)
+            # just calculating some heuristic risk score for now
             risk = 0.0
             feat = features[0]  # First row
             
@@ -191,7 +190,7 @@ class MortalityPredictor:
             return np.array([[risk]])
     
     def save_model(self, path: str):
-        """Save model and scaler"""
+        # save model weights + scaler
         torch.save({
             'model_state_dict': self.model.state_dict(),
             'scaler_mean': self.scaler.mean_,
@@ -200,7 +199,7 @@ class MortalityPredictor:
         }, path)
     
     def load_model(self, path: str):
-        """Load model and scaler"""
+        # load everything back
         checkpoint = torch.load(path)
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.scaler.mean_ = checkpoint['scaler_mean']

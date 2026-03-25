@@ -3,13 +3,12 @@ Genetic Algo for hospital scheduling
 """
 
 import random
-import numpy as np
-from typing import List, Tuple, Callable
+from typing import List, Tuple, Any
 from dataclasses import dataclass
 
 @dataclass
 class ResourceSchedule:
-    """Represents a schedule of resource allocation"""
+    # simple struct for a schedule
     schedule_id: str
     assignments: List[Tuple[str, str, float]]  # (resource, task, time)
     total_cost: float
@@ -18,7 +17,7 @@ class ResourceSchedule:
     patient_satisfaction: float
 
 class GeneticResourceOptimizer:
-    """GA for scheduling"""
+    # genetic algo for resource scheduling
     
     def __init__(self, 
                  population_size: int = 100,
@@ -36,15 +35,15 @@ class GeneticResourceOptimizer:
         self.population = []
         self.fitness_history = []
         
-    def initialize_population(self, tasks: List[Task], resources: List[Resource]):
-        """Initialize population with random schedules"""
+    def initialize_population(self, tasks: List[Any], resources: List[Any]):
+        # fill pop with random schedules initially
         self.population = []
         for _ in range(self.population_size):
             schedule = self._generate_random_schedule(tasks, resources)
             self.population.append(schedule)
             
-    def _generate_random_schedule(self, tasks: List[Task], resources: List[Resource]) -> ResourceSchedule:
-        """Generate random valid schedule"""
+    def _generate_random_schedule(self, tasks: List[Any], resources: List[Any]) -> ResourceSchedule:
+        # random valid schedule
         assignments = []
         used_resources = set()
         
@@ -111,14 +110,15 @@ class GeneticResourceOptimizer:
         point1 = random.randint(0, len(parent1.assignments))
         point2 = random.randint(point1, len(parent1.assignments))
         
-        # Create children by swapping segments
-        child1_assignments = (parent1.assignments[:point1] + 
-                             parent2.assignments[point1:point2] + 
-                             parent1.assignments[point2:])
+        child1_assignments = []
+        child1_assignments.extend(parent1.assignments[:point1])
+        child1_assignments.extend(parent2.assignments[point1:point2])
+        child1_assignments.extend(parent1.assignments[point2:])
         
-        child2_assignments = (parent2.assignments[:point1] + 
-                             parent1.assignments[point1:point2] + 
-                             parent2.assignments[point2:])
+        child2_assignments = []
+        child2_assignments.extend(parent2.assignments[:point1])
+        child2_assignments.extend(parent1.assignments[point1:point2])
+        child2_assignments.extend(parent2.assignments[point2:])
         
         child1 = ResourceSchedule(
             schedule_id=str(random.randint(1000, 9999)),
@@ -140,7 +140,7 @@ class GeneticResourceOptimizer:
         
         return child1, child2
     
-    def mutate(self, schedule: ResourceSchedule, resources: List[Resource]):
+    def mutate(self, schedule: ResourceSchedule, resources: List[Any]):
         """
         Mutation operator with adaptive mutation rate
         """
@@ -260,7 +260,7 @@ class GeneticResourceOptimizer:
         return best_schedule
     
     def _adapt_mutation_rate(self, fitness_history: List[float]):
-        """Adapt mutation rate based on fitness stagnation"""
+        # adjust mutation rate if we get stuck in a local minima
         if len(fitness_history) < 20:
             return
         

@@ -1,12 +1,11 @@
 import asyncio
 import heapq
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum
 import numpy as np
-from collections import deque
 import networkx as nx
-import math # Added import for math module
+import math
 
 class AgentState(Enum):
     IDLE = "idle"
@@ -25,7 +24,7 @@ class ResourceType(Enum):
 
 @dataclass
 class Task:
-    """Represents a medical task to be executed"""
+    # represents a medical task to be executed
     id: str
     patient_id: str
     task_type: str
@@ -38,21 +37,19 @@ class Task:
 
 @dataclass
 class Agent:
-    """Base agent with capabilities and state"""
+    # base agent definition
     id: str
     agent_type: str
     capabilities: List[str]
     current_location: Tuple[int, int]
     state: AgentState
-    current_task: str
     skill_level: float
     availability: float  # Time available
     energy_level: float  # 0-100
+    current_task: Optional[str] = None
 
 class MultiAgentCoordinator:
-    """
-    Multi-Agent System coordinator
-    """
+    # MAS coordinator for agents + tasks
 
     def __init__(self):
         self.agents: Dict[str, Agent] = {}
@@ -63,12 +60,12 @@ class MultiAgentCoordinator:
         self.communication_graph = nx.Graph()
 
     def register_agent(self, agent: Agent):
-        """Register a new agent in the system"""
+        # register new agent
         self.agents[agent.id] = agent
         self.communication_graph.add_node(agent.id, type=agent.agent_type)
 
     def add_task(self, task: Task):
-        """Add task to queue with priority"""
+        # add task to queue with priority
         heapq.heappush(self.task_queue, (-task.priority, task.id))
         self.tasks[task.id] = task
 
@@ -97,7 +94,7 @@ class MultiAgentCoordinator:
                 print(f"Failed to allocate task {task_id}")
 
     def _find_eligible_agents(self, task: Task) -> List[Agent]:
-        """Find agents that can perform the task"""
+        # find agents that can do this task
         eligible = []
         for agent in self.agents.values():
             # Check if agent has required capabilities
@@ -111,7 +108,7 @@ class MultiAgentCoordinator:
         return eligible
 
     async def _collect_bids(self, agents: List[Agent], task: Task) -> Dict[str, float]:
-        """Collect bids from agents (simulated negotiation)"""
+        # collect bids from agents (simulated negotiation)
         bids = {}
         for agent in agents:
             # agent calculates bid based on distance, workload, skill, energy
@@ -135,13 +132,13 @@ class MultiAgentCoordinator:
 
         return bids
 
-    def _select_best_bid(self, bids: Dict[str, float]) -> str:
-        """Select best bid using game theory principles"""
+    def _select_best_bid(self, bids: Dict[str, float]) -> Optional[str]:
+        # best bid via simple game theory principles
         if not bids:
             return None
 
         # Minimize cost (bid)
-        winner = min(bids, key=bids.get)
+        winner = min(bids.items(), key=lambda x: x[1])[0]
 
         # Record negotiation outcome for future learning
         self.negotiation_memory[winner] = {
@@ -152,7 +149,7 @@ class MultiAgentCoordinator:
         return winner
 
     async def _execute_task(self, agent_id: str, task: Task):
-        """Execute task and monitor progress"""
+        # trigger execution
         agent = self.agents[agent_id]
         agent.state = AgentState.BUSY
         agent.current_task = task.id
@@ -201,9 +198,7 @@ class CoalitionFormation:
         self.coalitions = {}
 
     def form_coalition(self, task: Task, required_agents: int) -> List[Agent]:
-        """
-        Form optimal coalition using Shapley value and cooperative game theory
-        """
+        # form optimal coalition using Shapley value
         eligible_agents = self.coordinator._find_eligible_agents(task)
 
         if len(eligible_agents) < required_agents:
@@ -218,7 +213,7 @@ class CoalitionFormation:
             coalition_values[tuple(combo)] = value
 
         # Select coalition with maximum value
-        best_coalition = max(coalition_values, key=coalition_values.get)
+        best_coalition = max(coalition_values.items(), key=lambda x: x[1])[0]
 
         # Calculate Shapley values for fair payoff distribution
         shapley_values = self._calculate_shapley_values(best_coalition, coalition_values)
@@ -235,7 +230,7 @@ class CoalitionFormation:
 
     def _calculate_shapley_values(self, coalition: List[Agent], coalition_values: Dict) -> Dict[str, float]:
         """Calculate Shapley values for fair distribution"""
-        shapley = {agent.id: 0 for agent in coalition}
+        shapley = {agent.id: 0.0 for agent in coalition}
         n = len(coalition)
 
         for i, agent in enumerate(coalition):

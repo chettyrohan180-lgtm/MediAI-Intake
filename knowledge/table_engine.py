@@ -1,10 +1,8 @@
 import string
 
 class TableDiagnosisEngine:
-    """
-    Direct table-lookup diagnosis engine replacing Prolog rules.
-    Matches incoming symptoms against a known database of clinical presentations.
-    """
+    # direct table-lookup for diagnosis (replacing old prolog rules)
+    # matches incoming symptoms against our quick DB
     def __init__(self):
         # Database based on the provided tabular medical information
         self.database = [
@@ -87,7 +85,8 @@ class TableDiagnosisEngine:
         if not patient_symptoms_text:
             patient_symptoms_text = ""
             
-        # Preprocess input text into individual normalized words
+        # preprocess input text
+        # hack: fixing "atigue" typos from some test datasets
         text = patient_symptoms_text.lower().translate(str.maketrans('', '', string.punctuation)).replace('atigue', 'fatigue')
         input_words = set(text.split())
         
@@ -105,7 +104,7 @@ class TableDiagnosisEngine:
                 max_overlap = overlap
                 best_match = row
                 
-        # If literally no overlap was found, return a generic Observation task
+        # if no overlap, default to observation
         if not best_match or max_overlap == 0:
             return {
                 'patient_id': patient_id,
@@ -118,6 +117,8 @@ class TableDiagnosisEngine:
                 'severity': 0.1
             }
             
+        assert best_match is not None
+        
         return {
             'patient_id': patient_id,
             'symptoms': [patient_symptoms_text],

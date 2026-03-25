@@ -2,3 +2,4 @@ Patient ID,Age,Gender,Symptoms,Diagnosis,Explanation,Treatment,Mortality Risk
 44,50,female,"Palpitations, SOB, weakness, irregular pulse",Atrial Fibrillation,Irregular rapid heart rhythm (upper chambers).,"diagnosis_44 by doctor_2, treatment_44_cardioversion by vent_1",0.6148
 10,56,male,chest pain ,Myocardial Infarction,Coronary artery blockage; heart tissue death.,"diagnosis_10 by doctor_2, treatment_10_surgery by vent_1",0.7280
 10,40,male,"Thirst, frequent urination, fatigue",Type 2 Diabetes,Insulin resistance; high blood glucose.,"diagnosis_10 by vent_1, treatment_10_insulin by doctor_1",0.3295
+12,25,male,"Headache, blurred vision, often asymptomatic",Hypertension,High arterial pressure; risk of organ damage.,"diagnosis_12 by surgery_1, treatment_12_medication by icu_2",0.6350
