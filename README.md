@@ -1,25 +1,22 @@
-# MediAI Hospital System
+# MediAI Hospital Management System
 
-This is a hospital triage and management system I built to test out various AI/ML concepts. It simulates a hospital environment where different AI components work together to manage patients and resources.
+This is a hospital triage and management system designed to explore various AI/ML concepts. It simulates a hospital environment where different AI components work together to manage patients and resources.
 
-## What it does
+## Key Features
 
-- Predicts patient mortality risk based on their vitals (`ml/` stuff).
-- Does basic automated X-Ray analysis (`vision/`).
-- Routes patients using a rule-based table diagnosis and medical knowledge graph (`knowledge/`, `nlp/`).
-- Uses a multi-agent system where doctors, ICU beds, and surgery rooms are treated as agents that pick up tasks (`agents/`).
-- I also threw in some search algorithms:
-  - **Genetic Algorithms** to figure out the best way to schedule procedures.
-  - **Pathfinding (A*, BFS, DFS)** to route things optimally around the hospital network (`search/`).
-- **Reinforcement Learning** for trying to tweak resource allocation (`rl/`).
-- It has a web UI built with FastAPI and plain CSS (`api.py` & `static/`).
+- **Mortality Risk Prediction**: Predicts patient mortality risk based on vitals using a Deep Neural Network (MLP).
+- **Automated X-Ray Analysis**: Basic diagnostics for medical imaging.
+- **Rule-based Diagnosis**: Matches symptoms against a medical knowledge base for rapid triage and severity assessment.
+- **Multi-Agent Coordination**: Models doctors, ICU beds, and surgery rooms as autonomous agents that bid on tasks.
+- **Scheduling Optimization**: Uses Genetic Algorithms (GA) to find optimal resource schedules and minimize completion times.
+- **Optimized Pathfinding**: Implements A*, BFS, and DFS for routing within the hospital network.
 
-## Running it
+## Running the System
 
-I made a script to get it running quickly without messing with dependencies manually.
+To get the dashboard running:
 
 **On Windows:**
-Just double-click `Run_Dashboard.bat`. It'll set up a virtual environment, install whatever's in `requirements.txt`, start the server, and open the dashboard in your browser automatically.
+Double-click `Run_Dashboard.bat`. This script will set up a virtual environment, install dependencies, and start the FastAPI server.
 
 **On Mac/Linux:**
 ```bash
@@ -28,11 +25,15 @@ source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn api:app
 ```
-Then just go to `http://localhost:8000`.
+Then navigate to `http://localhost:8000`.
 
-## Code Structure
+## Project Structure
 
-- `api.py`: The web server.
-- `main.py`: The core logic. If you run this directly, it just does a terminal simulation of a few patients.
-- `static/`: Frontend stuff.
-- The other folders (`ml/`, `vision/`, `agents/`, etc.) hold the logic for those specific sections.
+- `api.py`: FastAPI web server and dashboard logic.
+- `main.py`: Core simulation logic and terminal interface.
+- `agents/`: Multi-agent coordination and negotiation modules.
+- `knowledge/`: Diagnostic logic and medical table engine.
+- `ml/`: Machine learning models for clinical prediction.
+- `search/`: Optimization and pathfinding algorithms.
+- `static/`: Frontend dashboard assets.
+- `vision/`: Image processing for medical diagnostics.
